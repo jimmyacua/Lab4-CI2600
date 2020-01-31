@@ -182,7 +182,7 @@ if __name__ == '__main__':
     labels = read_idx('train-labels.idx1-ubyte')
     model = Network()
     #optimizer = optim.Adam(model.parameters(), lr=0.01)
-    #training_opt(100, model, images, labels, optimizer)
+    #training_opt(1000, model, images, labels, optimizer)
 
     imagesTest = read_idx('t10k-images.idx3-ubyte')
     labelsTest = read_idx('t10k-labels.idx1-ubyte')
@@ -201,4 +201,11 @@ if __name__ == '__main__':
     for i in range(0, one.size()[0]):
         image.putdata(list(one[i].view(-1)))  # el -1 convierte a una dimension
         #image.show()
-        image.save(os.path.join('./images/'+str(i) + '.jpg'))
+        image.save(os.path.join('./images/hidden/'+str(i) + '.jpg'))
+
+    one = model.output.weight
+    image = Image.new('L', (28, 28))
+    for i in range(0, one.size()[0]):
+        image.putdata(list(one[i].view(-1)))  # el -1 convierte a una dimension
+        # image.show()
+        image.save(os.path.join('./images/output/' + str(i) + '.jpg'))
