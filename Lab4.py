@@ -174,7 +174,7 @@ def training_opt(n, model, images, labels, optimizer):
         optimizer.step()
         print('Epoch %d, Loss %f' % (i, float(loss)))
 
-    torch.save(model.state_dict(), './save/nn')
+    #torch.save(model.state_dict(), './save/nn')
 
 
 if __name__ == '__main__':
@@ -182,7 +182,7 @@ if __name__ == '__main__':
     labels = read_idx('train-labels.idx1-ubyte')
     model = Network()
     #optimizer = optim.Adam(model.parameters(), lr=0.01)
-    #training_opt(1000, model, images, labels, optimizer)
+    #training_opt(10, model, images, labels, optimizer)
 
     imagesTest = read_idx('t10k-images.idx3-ubyte')
     labelsTest = read_idx('t10k-labels.idx1-ubyte')
@@ -196,7 +196,21 @@ if __name__ == '__main__':
     cr = classification_report(labelsTest, pred.max(1)[1], target_names=target_names)
     print(cr)
 
-    one = model.hidden.weight
+    image = Image.new('L', (28, 28))
+    i = 0
+    for neurona in model.hidden.weight:
+        weights = ((neurona - neurona.min()) / (neurona.max() - neurona.min()))*255
+        image.putdata(list(weights.view(-1)))
+        image.save(os.path.join('./images/hidden/' + str(i) + '.jpg'))
+        i = i+1
+
+    i = 0
+    for neurona in model.hidden.weight:
+        weights = ((neurona - neurona.min()) / (neurona.max() - neurona.min())) * 255
+        image.putdata(list(weights.view(-1)))
+        image.save(os.path.join('./images/output/' + str(i) + '.jpg'))
+        i = i + 1
+    '''one = model.hidden.weight.data
     image = Image.new('L', (28, 28))
     for i in range(0, one.size()[0]):
         image.putdata(list(one[i].view(-1)))  # el -1 convierte a una dimension
@@ -208,4 +222,4 @@ if __name__ == '__main__':
     for i in range(0, one.size()[0]):
         image.putdata(list(one[i].view(-1)))  # el -1 convierte a una dimension
         # image.show()
-        image.save(os.path.join('./images/output/' + str(i) + '.jpg'))
+        image.save(os.path.join('./images/output/' + str(i) + '.jpg'))'''
